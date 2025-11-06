@@ -1,0 +1,5 @@
+package burli
+
+trait IsOwned {
+
+}

@@ -1,0 +1,66 @@
+
+== Car Configurator
+
+image::Vehicles.png[]
+
+[,java]
+----
+include::CarConfig_.scala[tag=fields]
+----
+
+== Vehicles
+
+image::Vehicles.png[]
+
+[,java]
+----
+include::Vehicles_.scala[tag=fields]
+----
+
+=== Vehicles Dialog
+
+image::VehiclesDialog.png[]
+
+== Specials
+
+image::Specials.png[]
+
+[,java]
+----
+include::Specials_.scala[tag=fields]
+----
+
+=== Specials Dialog
+
+image::SpecialsDialog.png[]
+
+[,java]
+----
+include::SpecialsDialog_.scala[tag=fields]
+----
+
+== Accessories
+
+image::Accessories.png[]
+
+[,java]
+----
+include::Accessories_.scala[tag=fields]
+----
+
+=== Accessories Dialog
+
+image::AccessoriesDialog.png[]
+
+[,java]
+----
+include::AccessoriesDialog_.scala[tag=fields]
+----
+
+== Selection details
+
+image::SelectionDetails.png[]
+
+== Purchase order details
+
+image::PurchaseOrderDetails.png[]

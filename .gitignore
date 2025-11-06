@@ -1,0 +1,18 @@
+
+# Playwright
+node_modules/
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
+/playwright/.auth/
+/.gradle/
+/build/
+/burli.iml
+/burli.ipr
+/burli.iws
+/burli.main.iml
+/burli.test.iml
+/src/main/scala/carConf/README.html
+/src/main/scala/carConf/README.pdf
+/carconfigWeb/

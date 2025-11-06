@@ -1,0 +1,59 @@
+== install
+
+* install jdk somethin 20 xxx or so
+
+* install scala
+-> incl. installation of correct version of ammonite
+
+* clone repository
+----
+git clone https://github.com/rneulinger/burli.git
+----
+
+
+
+* invoke shell in cloned repository. This may take a while if you do it the first time, because gradle has to download necessary libs
+----
+cd burli
+./gradlew jar
+----
+
+* create intellij project (optional but recommended)
+----
+./gradlew idea
+----
+
+* start ammonite in burli directory
+
+----
+:> amm
+----
+
+* copy and paste below lines to ammonite and press Enter
+
+----
+{
+  import $ivy.`com.microsoft.playwright:playwright:1.53.0`
+  import $cp.`./build/libs/burli.jar`
+  import com.microsoft.playwright.*
+  import com.microsoft.playwright.options.*
+  import burli.*
+  import carConf.*
+}
+----
+* type / and press enter +
+ammonite starts the application (this may take a while). Also, if you do this for the first time ammonite will download some neccesary files
+
+* now you can do stuff with the app
+
+----
+/.
+----
+
+* since / is an alias for C1 you can have even more than one instance for the application.
+
+----
+C1.
+
+C2.
+----
