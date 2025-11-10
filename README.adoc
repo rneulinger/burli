@@ -57,3 +57,21 @@ C1.
 
 C2.
 ----
+
+== used software
+
+* https://playwright.dev/docs/intro[playwright]
+* https://playwright.dev/docs/intro[playwright install]
+* https://asciidoctor.org/docs/[asciidoctor]
+* https://docs.asciidoctor.org/asciidoc/latest/[asciidoc]
+* https://scala-lang.org/[scala]
+* https://ammonite.io/[ammonite]
+
+== codegen
+
+* https://playwright.dev/docs/codegen[codegen]
+* file:///C:/burli/carconfigWeb/html/CarConfig.htm?lang=en
+----
+npx playwright codegen --color-scheme=dark playwright.dev
+npx playwright codegen file:///C:/burli/carconfigWeb/html/CarConfig.htm?lang=en
+----
