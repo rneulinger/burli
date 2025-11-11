@@ -12,27 +12,9 @@ object Lab extends Main( ){
   // file:///C:/burli/carconfigWeb/html/CarConfig.htm?lang=en
 
   @main def clickMains() = {
-    Specials.click
-    Accessories.click
-    Vehicles.click
-
-//    page.getByRole(AriaRole.CELL, new Page.GetByRoleOptions().setName("Model")).click();
-//    page.getByRole(AriaRole.CELL, new Page.GetByRoleOptions().setName("ID").setExact(true)).click();
-//    page.getByRole(AriaRole.CELL, new Page.GetByRoleOptions().setName("Price").setExact(true)).click();
-//    page.locator("#VehicleTablePanel").click();
-//    page.getByRole(AriaRole.CELL, new Page.GetByRoleOptions().setName("I5")).click();
-//    page.getByRole(AriaRole.CELL, new Page.GetByRoleOptions().setName("M5")).click();
-//    page.locator("#VehicleTable").getByRole(AriaRole.CELL, new Locator.GetByRoleOptions().setName("$29,000.00")).click();
-//    page.getByText("Base price").click();
-//    page.locator("#BasePrice_input").click();
-//    page.getByText("Specials price").click();
-//    page.locator("#SpecialPrice_input").click();
-//    page.getByText("Accessories price", new Page.GetByTextOptions().setExact(true)).click();
-//    page.locator("#AccessoryPrice_input").click();
-//    page.locator("#DiscountValue_input").click();
-//    page.getByRole(AriaRole.BUTTON, new Page.GetByRoleOptions().setName("-5%")).click();
-//    page.getByText("$27,550.00").click();
-
+    SpecialsTab.click
+    AccessoriesTab.click
+    VehiclesTab.click
 
     goto(Menu.File)
     goto(Menu.File)
@@ -41,26 +23,59 @@ object Lab extends Main( ){
     goto(Menu.Options)
     goto(Menu.Options)
     goto(Menu.Options_Vehicles)
-    page.getByRole(AriaRole.BUTTON, new Page.GetByRoleOptions().setName("Cancel")).click();
+
+    def clickButton( name:String ) ={
+      page.getByRole(AriaRole.BUTTON, new Page.GetByRoleOptions().setName(name)).click();
+    }
+    def clickOK() = clickButton( "OK")
+    def clickCancel() = clickButton( "Cancel")
+
+    VehiclesDialog.VehicleName.flash()
+    clickCancel()
+
     goto(Menu.Options_Specials)
-    page.getByRole(AriaRole.BUTTON, new Page.GetByRoleOptions().setName("OK")).click();
+    clickOK()
     goto(Menu.Options_Accessories)
-    page.getByRole(AriaRole.BUTTON, new Page.GetByRoleOptions().setName("OK")).click();
+    clickOK()
 
     goto( Menu.PurchaseOrder)
     goto( Menu.PurchaseOrder)
     goto( Menu.PurchaseOrder_ViewSelectedDetails)
-    page.getByRole(AriaRole.BUTTON, new Page.GetByRoleOptions().setName("OK")).click();
+    clickOK()
     goto( Menu.PurchaseOrder_SendOrder)
-    page.getByRole(AriaRole.BUTTON, new Page.GetByRoleOptions().setName("Cancel")).click();
+    clickCancel()
 
     goto( Menu.Help)
     goto( Menu.Help)
     goto( Menu.Help_Info)
-    page.getByRole(AriaRole.BUTTON, new Page.GetByRoleOptions().setName("OK")).click();
+    clickOK()
     goto( Menu.Help_Buggy)
     goto( Menu.Help_LoadTestingModule)
 
     close()
   }
 }
+
+import com.microsoft.playwright.*;
+
+object FlashElement {
+  def main(args:Array[String]):Unit = {
+      val playwright = Playwright.create()
+      val browser = playwright.chromium().launch(new BrowserType.LaunchOptions().setHeadless(false));
+      val page = browser.newPage();
+      page.navigate("https://example.com");
+
+      // Replace with your actual selector
+      val selector = "h1";
+
+      // Inject JavaScript to flash the element
+      page.evalOnSelector(selector, "element => {" +
+        "element.style.transition = 'background-color 0.3s ease';" +
+        "element.style.backgroundColor = 'yellow';" +
+        "setTimeout(() => element.style.backgroundColor = '', 500);" +
+        "}");
+  }
+}
+
+
+

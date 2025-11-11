@@ -1,5 +1,4 @@
-package carConf
-
+package carConf.accessories
 
 import burli.*
 import burli.bricks.*

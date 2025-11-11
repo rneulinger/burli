@@ -1,9 +1,13 @@
 package carConf
 
 import burli.*
-
+import carConf.specials.Specials_
 import com.microsoft.playwright.*
 import com.microsoft.playwright.options.*
+
+import carConf.specials.*
+import carConf.vehicles.*
+import carConf.accessories.*
 
 /*
 {
@@ -20,9 +24,21 @@ class Main() extends PwRoot(s) {
 
   // TODO Mene
   val CarConfig = CarConfig_(this)
-  val Specials = CarConfig.Specials
-  val Vehicles = CarConfig.Vehicles
-  val Accessories = CarConfig.Accessories
+  val SpecialsTab = CarConfig.SpecialsTab
+  val VehiclesTab = CarConfig.VehiclesTab
+  val AccessoriesTab = CarConfig.AccessoriesTab
+
+  val Specials = Specials_(this)
+  val SpecialsDialog = SpecialsDialog_(this)
+
+  val Vehicles = Vehicles_(this)
+  val VehiclesDialog = VehiclesDialog_(this)
+
+  val Accessories = Accessories_(this)
+  val AccessoriesDialog = AccessoriesDialog_(this)
+
+  object specials {
+  }
 
   enum Menu {
     case File

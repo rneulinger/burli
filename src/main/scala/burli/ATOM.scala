@@ -11,7 +11,16 @@ abstract class ATOM[F <: FRM](by: By )(using ref:Own[F])
   def loc( pg:Page ) : Locator
 
   def loc: Locator = loc(own.pg)
-  //final def pf = own.pg
+
+  def flash() = {
+    loc.evaluate("element => {" +
+      "element.style.transition = 'background-color 0.3s ease';" +
+      "element.style.backgroundColor = 'yellow';" +
+      "setTimeout(() => element.style.backgroundColor = '', 500);" +
+      "}")
+    Thread.sleep(1000)
+  }
+
   /**
    * default locator
    * @return
@@ -25,8 +34,9 @@ abstract class ATOM[F <: FRM](by: By )(using ref:Own[F])
         val value = field.get(own)
         if (value eq this) {
           //println("My name im parent is: " + field.getName)
-          return field.getName.
-            replaceAll("\\$u0020", " ") // TODO to be improved
+          return field.getName
+            .replaceAll("\\$u0020", " ")
+            .replaceAll("-", " ") // TODO to be improved
         }
       } catch {
         case e: IllegalAccessException =>

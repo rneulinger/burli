@@ -2,12 +2,15 @@ import scala.collection.JavaConverters._
 
 val inp =
   """
-  Specials
-  Base price
-  Specials price
-  Accessories price
-  Discount
-  Final price
+  Vehicles
+  Vehicle name
+  ID
+  Price
+  New
+  Change
+  Delete
+  OK
+  Cancel
   """.stripMargin
 
 val fields = inp.lines.iterator.asScala.
