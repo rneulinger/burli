@@ -45,5 +45,6 @@ abstract class ATOM[F <: FRM](by: By )(using ref:Own[F])
     }
     "NOT FOUND"
   }
+  own.adopt(this)
 }
 

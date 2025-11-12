@@ -17,4 +17,5 @@ trait CanOwn {
    * @return
    */
   final def page:Page = pg
+  def adopt( obj:OBJ): Unit 
 }
