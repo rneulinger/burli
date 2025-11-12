@@ -21,13 +21,13 @@ import com.microsoft.playwright.*
 //}
 
 enum Loc {
-  case Id(id:String)
+  //case Id(id:String)
   case Exact
   case Contains
   case Default
 }
 
-type By = Loc | Function1[Page,Locator]
+type By = Loc | String | Function1[Page,Locator]
 
 /** wrapper for given / using i FRM */
 case class Own[+FRM](own:FRM)

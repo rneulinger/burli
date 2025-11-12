@@ -3,7 +3,7 @@ package burli
 import scala.collection.JavaConverters.asScalaBufferConverter
 import com.microsoft.playwright.*
 
-abstract class PwRoot(val baseUrl:String) extends CanOwn{
+class PwRoot(val baseUrl:String) extends CanOwn{
   val playwright: Playwright = Playwright.create()
 
   val bOpts = new BrowserType.LaunchOptions()
@@ -41,7 +41,7 @@ abstract class PwRoot(val baseUrl:String) extends CanOwn{
     tmp
   }
 
-  override def adopt(obj: OBJ): Unit =
+  final def adopt(obj: OBJ): Unit =
     obj match {
       case atom: ATOM[_] =>
         adoptedAtoms = adoptedAtoms.appended(atom)
@@ -49,5 +49,15 @@ abstract class PwRoot(val baseUrl:String) extends CanOwn{
       case frm: FRM =>
         adoptedFrms = adoptedFrms.appended(frm)
     }
-
+  final def dump(): Unit = {
+    println( atoms )
+    for(  frm <- frms ){
+      println( frm._1)
+      val len = frm._2.atoms.map(_._1.length).max
+      for ( atom <- frm._2.atoms ){
+        val name = atom._1
+        println("\t" + name + " " * (len - name.length) + " : " + atom._2)
+      }
+    }
+  }
 }

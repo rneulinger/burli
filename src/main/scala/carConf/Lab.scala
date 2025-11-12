@@ -52,13 +52,7 @@ object Lab extends Main( ){
     goto( Menu.Help_Buggy)
     goto( Menu.Help_LoadTestingModule)
 
-    println( atoms )
-    for(  frm <- frms ){
-      println( frm._1)
-      for ( atom <- frm._2.atoms ){
-        println("\t" + atom._1 + " " + atom._2)
-      }
-    }
+    dump()
     close()
   }
 }
