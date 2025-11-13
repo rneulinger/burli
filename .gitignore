@@ -16,3 +16,4 @@ node_modules/
 /src/main/scala/carConf/README.html
 /src/main/scala/carConf/README.pdf
 /carconfigWeb/
+/.idea/

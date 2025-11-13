@@ -1,0 +1,221 @@
+//:doctype: book
+:icons: font
+:icon-set: fas
+:experimental:
+//:toc:
+//:source-highlighter: rouge
+//:source-highlighter: highlight.js
+//:source-highlighter: coderay
+//:source-highlighter: pygments
+:DOD: Definition Of Done
+
+icon:check[]
+
+* https://docs.asciidoctor.org/asciidoc/latest/syntax-quick-reference/[adoc]
+
+* https://www.deepl.com/de/translator[deepl]
+
+* https://copilot.microsoft.com/[copilot]
+
+* https://docs.reqnroll.net/latest/automation/cucumber-expressions.html[Cucumber Expressions]
+* https://172.26.47.19/[19]
+
+* https://172.26.47.19/settings/management/users[Users]
+
+* https://blackned-technologies.atlassian.net/jira/software/c/projects/TARC/boards/1126/timeline[Timeline-Jira]
+
+* https://blackned-technologies.atlassian.net/jira/software/c/projects/TARC/list[Quickstart]
+
+* https://blackned-technologies.atlassian.net/jira/software/c/projects/TARC/boards/1126?assignee=712020%3A36545ad8-01c6-4e1c-ab24-28e71d1753f3[TARC-Aufgaben]
+
+* https://blackned-technologies.atlassian.net/browse/TARC-265[TARC-265 VoIP Refactoring]
+
+== Brainstorming Elements of Language
+
+Syntax, Sematic, Definitions ....
+// TODO provide intro
+
+== Environmental  scopes
+
+=== Causes
+
+[,scala]
+----
+include::Language.scala[tag=env]
+----
+
+<.> nothing is required  +
+e.g. wait
+
+<.> more to come Prio:-
+
+<.> just to keep in mind Prio:-
+
+<.> do not forget we have mobile devices +
+touch gestures
+
+<.> type , press, special keystrokes/-sequences
+<.> point, move, click, drag @ drop
+<.> download, upload, restart, send-mail ..
+
+<.> all the rest App UI
+
+[,java]
+----
+include::Language.scala[tag=cause]
+----
+
+=== Effects
+
+[,java]
+----
+include::Language.scala[tag=effect]
+----
+
+== Implementation matrix Obj
+
+=> method (polymorphic, named args, optional args, )
+// TODO write explanation
+
+[,java]
+----
+include::Language.scala[tag=abrev]
+----
+
+//include::Language.scala[]
+
+== User Stories (poor man's backlog)
+
+=== Refactoring (When|Then|And|But|Given) I ......
+
+Quality Goal::
+DOD::
+
+* all occurences in relates feature-files are eliminated
+* usefull regular expression are documented (identify cases)
+* task is automated -> (Opt)
+
+=== Refactoring a, an, the ...
+
+Quality Goal::
+DOD::
+
+* all occurences in relates feature-files are eliminated
+* usefull regular expression are documented (identify cases)
+* task is automated -> (Opt)
+
+=== Refactoring logical Operations to be fully uppercase
+
+* AND
+* OR
+* NOT
+* XOR whenever possible Prio: -
+
+Q: how to handle identified normal OR to avoid rethinking
+
+P: Use _OR for identified normal OR // Prio: -
+
+Quality Goal::
+DOD::
+
+* all occurences in relates feature-files are eliminated
+* usefull regular expression are documented (identify cases)
+* (Opt) task is automated  +
+// this will be a continuous task
+
+=== snapshot / snapshotUpdate
+
+as a Tester i want to create documentation with up to date screen shots
+
+:upd-switch: UPDATE_SCREENSHOTS
+:upd-default: SCREENSHOT.png
+
+introduce boolean flag::
+{upd-switch} normally off // side-effect reduces execution speed when true
+
+snapshot "filename"::
+save to given `filename`  +
+// auto-adding of missing extension `.png` `NOT` part of DOD  +
+// but it would be nice and it is assumed in scenarios below
+
+snapshot -> save::
+save entire screen to `{upd-default}` file in `PNG` format  +
+`uses snapshot "filename"`
+
+snapshotUpdate "filename"::
+save to given `filename` if `{upd-switch}` is set // no auto-adding of missing png  +
+`uses snapshot "filename"`
+
+[,gherkin]
+----
+Scernario usage of screenshot
+ When I goto User
+ And I snapshot "Users.png" <.>
+ And breakpoint
+ And click Add
+ And ...
+----
+
+<.> `.png` could be removed if autocompletion is implemented
+
+=== set für field verwenden
+
+set existiert im Moment ohne Adressierung, wird aber sicher erweitert werden um adressierung in komplexeren objekten wie tabellen oder bäume zu unterstützen.
+
+Dabei ergeben sich unterschiedliche Bedeutung fúr die Semantik die zu Verwirrung führen können
+
+in Tabellen::
+* set( val, row, col) <=> set( val, col, row)
+
+icon:info[] // gedanklicher konflikt mit (x,y) aus der Schule
+
+in Listen::
+* set( val, row) // man denkt hier vertikal
+
+in Text::
+* insert( val, col) // col <=> pos ... man denkt hier horizontal
+* delete(col, cnt)
+* append
+
+Q: Machen wir die Indizes 0- oder 1-basiert 0 müsste man einigen Testen wohl erklären, - wenn es aber einmal verstanden ist, scheidet eine nervige Fehlerquelle aus, und die Entwickler denken so.
+
+Es wäre auch die rollierende Adressierung vermittelbar -1 ist das letzte die Range Semantik ist gut dokumentier und funktioniert (Python...)
+
+DOD::
+
+aktuell::
+type "Mustermann" into "Name" - field
+refactored::
+set "Name" - field = "Mustermann"
+
+meiner Meinung nach sollten wir versuchen die Methoden ein wenig smarter zu gestalten und die Type-Definitioen auch weglassen können, wenn es eine eindeutige Zuordnung gibt.
+
+aktuell-smart::
+type "Mustermann" into "Name"
+refactored-smart::
+set "Name" = "Mustermann"
+
+eine weiter
+
+=== introduce (goto/navigate to) / in User Domain
+
+:cmd: navigate to
+
+* navigation in problem domain / model
+* benefit map of our application in progress
+* names can be used in screenshots
+
+e.g. {cmd}  "User"
+
+DOD:
+
+* implementation uses `open path`
+* identified paths are documented -> dependency to screenshot update
+* a dictionary UI -> path exists
+
+=== analyse and improve semantics on the fly
+
+|kbd:[Ctrl+T]
+|Open a new tab
+
+
