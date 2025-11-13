@@ -27,17 +27,17 @@ enum Loc {
   case Default
 }
 
-type By = Loc | String | Function1[Page,Locator]
+type By = Loc | String | Function1[Page, Locator]
 
 /** wrapper for given / using i FRM */
-case class Own[+FRM](own:FRM)
+case class Own[+FRM](own: FRM)
 
 
 //class X1 extends FRM
 //  val y = Own[X1](this)
-  //val x = Own[X1]
+//val x = Own[X1]
 
-  //val x = LBL("")()
+//val x = LBL("")()
 
 
 

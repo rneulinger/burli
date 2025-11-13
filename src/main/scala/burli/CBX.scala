@@ -3,9 +3,8 @@ package burli
 import com.microsoft.playwright.options.AriaRole
 import com.microsoft.playwright.{Locator, Page}
 
-case class CBX[F <: FRM](by:By=Loc.Default)(using ref:Own[F])
-  extends ATOM[F](by)
-{
+case class CBX[F <: FRM](b: By = Loc.Default)(using ref: Own[F])
+  extends ATOM[F](b) {
 
   override def loc(pg: Page): Locator = {
     by match {
@@ -27,4 +26,5 @@ case class CBX[F <: FRM](by:By=Loc.Default)(using ref:Own[F])
 
   def uncheck: F =
     own
+
 }

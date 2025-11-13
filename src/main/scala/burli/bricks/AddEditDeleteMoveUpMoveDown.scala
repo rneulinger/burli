@@ -4,10 +4,11 @@ import burli.*
 
 /**
  * Decorator Button
+ *
  * @tparam F owner of these buttons
  */
 
-trait AddEditDeleteMoveUpMoveDown[F <: FRM] extends AddEditDelete[F]{
+trait AddEditDeleteMoveUpMoveDown[F <: FRM] extends AddEditDelete[F] {
   self: F =>
 
   def ref: Own[F]

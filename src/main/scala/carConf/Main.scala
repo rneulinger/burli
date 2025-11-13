@@ -19,7 +19,7 @@ import carConf.accessories.*
   import carConf.*
 }
 */
-val s = "file:///C:/dev/burli/carconfigWeb/html/CarConfig.htm?lang=en#"
+val s = "file:///C:/Projects/burli/carconfigWeb/html/CarConfig.htm?lang=en#"
 class Main() extends PwRoot(s) {
 
   // TODO Mene

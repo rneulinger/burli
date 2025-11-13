@@ -1,6 +1,7 @@
 package burli.bricks
 
 import burli.*
+
 trait CancelFinish[F <: FRM]() {
   self: F =>
 

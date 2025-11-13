@@ -4,7 +4,9 @@ import com.microsoft.playwright.{Locator, Page}
 
 abstract class OBJ {
   protected def isRoot: Boolean
-  def pg:Page
+
+  def pg: Page
+
   def myType: String = this.getClass.getSimpleName
 
   protected def pre = {
@@ -13,6 +15,7 @@ abstract class OBJ {
     val t = cla.getTypeName
     s"$n $t"
   }
-  def log(msg:Any) =
+
+  def log(msg: Any) =
     println(pre + "." + msg)
 }

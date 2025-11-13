@@ -3,9 +3,8 @@ package burli
 import com.microsoft.playwright.{Locator, Page}
 import com.microsoft.playwright.options.AriaRole
 
-case class LST[F <: FRM](by:By=Loc.Default) (using ref:Own[F])
-  extends ATOM[F](by)
-{
+case class LST[F <: FRM](b: By = Loc.Default)(using ref: Own[F])
+  extends ATOM[F](b) {
   override def loc(pg: Page): Locator = {
     by match {
       case Loc.Default =>

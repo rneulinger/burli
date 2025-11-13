@@ -8,14 +8,22 @@ import com.microsoft.playwright.*
 trait CanOwn {
   /**
    * associated page
+   *
    * @return
    */
   def pg: Page
 
   /**
    * convenience method, to use gode generato rsnippet directly
+   *
    * @return
    */
-  final def page:Page = pg
-  def adopt( obj:OBJ): Unit 
+  final def page: Page = pg
+
+  def adopt(obj: OBJ): Unit
+
+  def openUrl(path: String): Unit
+
+  def onto( frm:FRM):Unit
+
 }

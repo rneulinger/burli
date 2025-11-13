@@ -4,6 +4,7 @@ import burli.*
 
 /**
  * Decorator Button
+ *
  * @tparam F
  * has buttons Ok, Cancel
  */

@@ -2,7 +2,7 @@ package burli.bricks
 
 import burli.*
 
-trait AEDM[F <: FRM] extends AED[F]{
+trait AEDM[F <: FRM] extends AED[F] {
   self: F =>
 
   def ref: Own[F]
