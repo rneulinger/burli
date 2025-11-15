@@ -36,7 +36,7 @@ abstract class ATOM[F <: FRM](b: By)(using ref: Own[F])
    * @return
    */
   //def defaultLocator:Locator
-  def myName: String = {
+  def fullName: String = {
 
     for (field <- own.getClass.getDeclaredFields) {
       field.setAccessible(true)
@@ -55,6 +55,8 @@ abstract class ATOM[F <: FRM](b: By)(using ref: Own[F])
     }
     "NOT FOUND"
   }
+
+  def shortName = Defs.mkCamelCase(fullName)
 
   own.adopt(this)
 

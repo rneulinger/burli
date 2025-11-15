@@ -7,7 +7,7 @@ abstract class OBJ {
 
   def pg: Page
 
-  def myType: String = this.getClass.getSimpleName
+  def myType: String = this.getClass.getSimpleName.reverse.dropWhile( _.toString == "_").reverse.mkString("")
 
   protected def pre = {
     val cla = this.getClass

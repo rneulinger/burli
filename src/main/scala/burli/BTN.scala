@@ -10,7 +10,7 @@ case class BTN[F <: FRM](b: By = Loc.Default)(using ref: Own[F])
     by match {
       case Loc.Default =>
         val opt = Page.GetByRoleOptions()
-          .setName(myName)
+          .setName(fullName)
           .setExact(false)
         pg.getByRole(AriaRole.BUTTON, opt)
 

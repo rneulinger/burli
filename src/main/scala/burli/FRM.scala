@@ -2,20 +2,20 @@ package burli
 
 import com.microsoft.playwright.*
 
-abstract class FRM(override val own: CanOwn)
+abstract class FRM(override val own: CanOwn, typ:String = "")
   extends CHILD with CanOwn {
-  own.adopt(this)
 
   def path: String = "" //
-  //final def goto(path:String="/"):Unit = gotoPath(path)
 
-  //  final def navigate:Unit = goto(path)
-  //
+  val fullType:String = if ( typ.isEmpty ) myType else  typ
+  own.adopt(this)
+
+
   override def pg: Page = own.pg
 
   private var adoptedAtoms = List[ATOM[?]]()
   lazy val atoms: Map[String, ATOM[?]] = {
-    val tmp = adoptedAtoms.map(a => a.myName -> a).toMap
+    val tmp = adoptedAtoms.map(a => a.fullName -> a).toMap
     tmp
   }
 
@@ -61,33 +61,49 @@ abstract class FRM(override val own: CanOwn)
     }
   }
 
+  def atomsMax = if atoms.isEmpty then 0 else atoms.keySet.map(_.length).max
+  def shortMax = if atoms.isEmpty then 0 else atoms.values.map(_.fullName.length).max
+  def typeMax = if atoms.isEmpty then 0 else atoms.values.map(_.myType.length).max
+  val BLANK = " ".charAt(0)
+
   def mkSet:String = {
+    val head = s"""|| ${"name".padTo(atomsMax," ".charAt(0))} |   | typ |"""
     val lines = for (a <- atoms) yield {
-      s"""|| ${a._1} | = |   |"""
+      s"""|| ${a._1.padTo(atomsMax,BLANK)} |   | ${a._2.myType.padTo(typeMax,BLANK)} |"""
     }
-    s"""* I am onto '$myType'
-      |* set:
-      ${lines.mkString("\n")}
+    val tbl = List(head) ::: lines.toList
+    val res = s"""
+      |* set: '$fullType'
+      ${tbl.mkString("\n")}
       |""".stripMargin
+    Defs.toClipboard(res)
   }
 
   def mkGet:String = {
+    val head = s"""|| ${"name".padTo(atomsMax,BLANK)} | op | ${"var".padTo(shortMax,BLANK)} |"""
     val lines = for (a <- atoms) yield {
-      s"""|| ${a._1} | => | ${a._1} |"""
+      s"""|| ${a._1.padTo(atomsMax,BLANK)} |    | ${a._2.shortName.padTo(shortMax,BLANK)} |"""
     }
-    s"""* I am onto '$myType'
-       |* get:
-       ${lines.mkString("\n")}
+    val tbl = List(head) ::: lines.toList
+    val res = s"""
+       |* get: '$fullType'
+       ${tbl.mkString("\n")}
        |""".stripMargin
+    Defs.toClipboard(res)
   }
+
   def mkChk:String = {
+    val head = s"""|| ${"name".padTo(atomsMax," ".charAt(0))} | op | ref |"""
     val lines = for (a <- atoms) yield {
-      s"""|| ${a._1} | == |   |"""
+      s"""|| ${a._1.padTo(atomsMax,BLANK)} | == |     |"""
     }
-    s"""* I am onto '$myType'
-       |* chk:
-       ${lines.mkString("\n")}
+    val tbl = List(head) ::: lines.toList
+    val res = s"""
+       |* chk: '$fullType'
+       ${tbl.mkString("\n")}
        |""".stripMargin
+
+    Defs.toClipboard(res)
 
   }
 
@@ -96,15 +112,26 @@ abstract class FRM(override val own: CanOwn)
    */
   def mkCs:String = {
     val lines = for (a <- atoms) yield {
-      s"""|  public final ${a._2.myType} ${a._2.myName} = new ${a._2.myName}(this);"""
+      val name = a._2.fullName
+      val short = Defs.mkCamelCase(name)
+      val typ = a._2.myType
+      s"""|${short} = new ${typ}(this, \"${name}\");"""
+    }
+    val decls = for (a <- atoms) yield {
+      val name = a._2.fullName
+      val short = Defs.mkCamelCase(name)
+      val typ = a._2.myType
+      s"""|    public readonly ${typ} ${short};"""
     }
 
-    s"""public class $myType : FRM{
-       |  public $myType( CanOwn own ) {
-       |    super( own );
+    val res = s"""public class $myType : FRM{
+       ${decls.mkString("\n")}
+       |
+       |  public $myType( CanOwn own ):base(own) {
+          ${lines.mkString("\n")}
        |  }
-       |${lines.mkString("\n")}
        |}
        |""".stripMargin
+    Defs.toClipboard(res)
   }
 }

@@ -1,0 +1,81 @@
+:doctype: book
+:toc:
+
+:UI: ../ui/
+= App
+
+== Car Configurator
+
+image::Vehicles.png[]
+
+[,java]
+----
+include::{UI}CarConfig_.scala[tag=fields]
+----
+
+== Vehicles
+
+image::Vehicles.png[]
+
+[,java]
+----
+include::{UI}vehicles/Vehicles_.scala[tag=fields]
+----
+
+=== Vehicles Dialog
+
+image::VehiclesDialog.png[]
+
+[,java]
+----
+include::{UI}vehicles/VehiclesDialog_.scala[tag=fields]
+----
+
+== Specials
+
+image::Specials.png[]
+
+[,java]
+----
+include::{UI}specials/Specials_.scala[tag=fields]
+----
+
+=== Specials Dialog
+
+image::SpecialsDialog.png[]
+
+[,java]
+----
+include::{UI}specials/SpecialsDialog_.scala[tag=fields]
+----
+
+== Accessories
+
+image::Accessories.png[]
+
+[,java]
+----
+include::{UI}accessories/Accessories_.scala[tag=fields]
+----
+
+=== Accessories Dialog
+
+image::AccessoriesDialog.png[]
+
+[,java]
+----
+include::{UI}accessories/AccessoriesDialog_.scala[tag=fields]
+----
+
+== Selection details
+
+image::SelectionDetails.png[]
+
+== Purchase order details
+
+image::PurchaseOrderDetails.png[]
+
+[,java]
+----
+include::{UI}PurchaseOrderDetails_.scala[tag=fields]
+----

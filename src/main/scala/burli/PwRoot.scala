@@ -1,11 +1,11 @@
 package burli
 
-import scala.collection.JavaConverters.asScalaBufferConverter
+import scala.jdk.CollectionConverters.*
 import com.microsoft.playwright.*
 
 class PwRoot(val baseUrl: String) extends CanOwn {
   private var adoptedAtoms = List[ATOM[?]]()
-  lazy val atoms: Map[String, ATOM[?]] = adoptedAtoms.map(a => a.myName -> a).toMap
+  lazy val atoms: Map[String, ATOM[?]] = adoptedAtoms.map(a => a.fullName -> a).toMap
 
   private var adoptedFrms = List[FRM]()
   lazy val frms: Map[String, FRM] = adoptedFrms.map(a => a.myType -> a).toMap
@@ -20,24 +20,27 @@ class PwRoot(val baseUrl: String) extends CanOwn {
         adoptedFrms = adoptedFrms.appended(frm)
     }
 
-  val playwright: Playwright = Playwright.create()
+  lazy val playwright: Playwright = Playwright.create()
 
-  val bOpts = new BrowserType.LaunchOptions()
+  lazy val bOpts = new BrowserType.LaunchOptions()
     .setHeadless(false)
-  val browser: Browser = playwright
+  lazy val browser: Browser = playwright
     .chromium()
     .launch(bOpts)
 
-  val cOpts: Browser.NewContextOptions = new Browser.NewContextOptions()
+  lazy val cOpts: Browser.NewContextOptions = new Browser.NewContextOptions()
     .setIgnoreHTTPSErrors(true)
-  val context: BrowserContext = browser.newContext(cOpts) // HTTPS-Fehler ignorieren
+  lazy val context: BrowserContext = browser.newContext(cOpts) // HTTPS-Fehler ignorieren
 
 
-  val pg: Page = context.newPage()
-  pg.navigate(baseUrl)
+  lazy val pg: Page = {
+    val tmp = context.newPage()
+    tmp.navigate(baseUrl)
+    tmp
+  }
 
   // Cookies auslesen
-  private val cookie = context.cookies().asScala
+  private lazy val cookie = context.cookies().asScala
 
   //  cookies.foreach(cookie => println(s"${cookie.name()} = ${cookie.value()}"))
   def close(): Unit = {
@@ -47,25 +50,6 @@ class PwRoot(val baseUrl: String) extends CanOwn {
 
   def home: Response = pg.navigate(baseUrl)
 
-  /**
-   * splits up a string and make it camel case
-   * "First name" -> "FirstName"
-   *
-   * @param s to convert
-   * @return
-   */
-  def mkCamelCase(s: String) : String= {
-    val clean = s.trim.replace("-", " ") // a few more to come
-    val chunks = clean.split("\\s+").toList
-    val res = for (s <- chunks) yield
-      val first = s.take(1).toUpperCase()
-      val rest = s.drop(1)
-      first + rest
-
-    res.mkString("")
-  }
-
-  //private val defaultFrame = new FRM(this){}
 
   /**
    * current view
@@ -88,7 +72,7 @@ class PwRoot(val baseUrl: String) extends CanOwn {
   }
 
   def goto(name: String): Unit = {
-    val dest = mkCamelCase(name) + "_"
+    val dest = Defs.mkCamelCase(name) + "_"
     if (frms.keySet.contains(dest)) {
       frms(dest).goto()
     } else{
@@ -97,13 +81,14 @@ class PwRoot(val baseUrl: String) extends CanOwn {
   }
 
   def onto( name:String): Unit = {
-    val dest = mkCamelCase(name) + "_"
+    val dest = Defs.mkCamelCase(name) + "_"
     if ( frms.keySet.contains(dest) ){
       onto( frms(dest))
     } else{
       println( "onto: cannot find frame:" + dest )
     }
   }
+
   def back:Unit = {
     if (viewStack.nonEmpty) {
       currentFrm = viewStack.pop()
@@ -112,11 +97,11 @@ class PwRoot(val baseUrl: String) extends CanOwn {
     }
   }
 
-
   final def dump(s: String = ""): Unit = {
     println(atoms)
     val hits = frms.filter(_._1.contains(s))
     for (frm <- hits) {
+        println()
         frm._2.dump()
     }
   }
@@ -124,4 +109,5 @@ class PwRoot(val baseUrl: String) extends CanOwn {
   override def openUrl(path: String): Unit = {
     pg.navigate(baseUrl + path)
   }
+  
 }
