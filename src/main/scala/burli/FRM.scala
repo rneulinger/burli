@@ -68,7 +68,7 @@ abstract class FRM(override val own: CanOwn, typ:String = "")
 
   def mkSet:String = {
     val head = s"""|| ${"name".padTo(atomsMax," ".charAt(0))} |   | typ |"""
-    val lines = for (a <- atoms) yield {
+    val lines = for (a <- atoms.filterNot(_._2.isInstanceOf[BTN[_]]) ) yield {
       s"""|| ${a._1.padTo(atomsMax,BLANK)} |   | ${a._2.myType.padTo(typeMax,BLANK)} |"""
     }
     val tbl = List(head) ::: lines.toList
@@ -79,9 +79,22 @@ abstract class FRM(override val own: CanOwn, typ:String = "")
     Defs.toClipboard(res)
   }
 
+  def mkAct:String = {
+    val head = s"""|| ${"name".padTo(atomsMax," ".charAt(0))} | op | p1 | p2 | p3 | typ |"""
+    val lines = for (a <- atoms) yield {
+      s"""|| ${a._1.padTo(atomsMax,BLANK)} |    |    |    |    | ${a._2.myType.padTo(typeMax,BLANK)} |"""
+    }
+    val tbl = List(head) ::: lines.toList
+    val res = s"""
+                 |* act: '$fullType'
+      ${tbl.mkString("\n")}
+                 |""".stripMargin
+    Defs.toClipboard(res)
+  }
+
   def mkGet:String = {
     val head = s"""|| ${"name".padTo(atomsMax,BLANK)} | op | ${"var".padTo(shortMax,BLANK)} |"""
-    val lines = for (a <- atoms) yield {
+    val lines = for (a <- atoms.filterNot(_._2.isInstanceOf[BTN[_]])) yield {
       s"""|| ${a._1.padTo(atomsMax,BLANK)} |    | ${a._2.shortName.padTo(shortMax,BLANK)} |"""
     }
     val tbl = List(head) ::: lines.toList
@@ -115,7 +128,7 @@ abstract class FRM(override val own: CanOwn, typ:String = "")
       val name = a._2.fullName
       val short = Defs.mkCamelCase(name)
       val typ = a._2.myType
-      s"""|${short} = new ${typ}(this, \"${name}\");"""
+      s"""|        ${short} = new ${typ}(this, \"${name}\");"""
     }
     val decls = for (a <- atoms) yield {
       val name = a._2.fullName
@@ -131,6 +144,7 @@ abstract class FRM(override val own: CanOwn, typ:String = "")
           ${lines.mkString("\n")}
        |  }
        |}
+       |// ${myType} _${myType} = new ${myType}( this );
        |""".stripMargin
     Defs.toClipboard(res)
   }

@@ -23,6 +23,9 @@ val s = "file:///C:/Projects/burli/carconfigWeb/html/CarConfig.htm?lang=en#"
 class Main() extends PwRoot(s) {
   override def nameOfApp = "Car Configurator"
 
+  override def predefBaseUrls = Map("Local" -> s)
+
+
   // TODO Mene
   val CarConfig = CarConfig_(this)
   val SpecialsTab = CarConfig.SpecialsTab

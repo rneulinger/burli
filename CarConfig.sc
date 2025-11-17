@@ -3,6 +3,5 @@ import $cp.`./build/libs/gradle-scala-cucumber.jar`
 import com.microsoft.playwright.*
 import com.microsoft.playwright.options.*
 import burli.*
-// add import of your app here
-// import myApp.*
+import carConf.*
 

@@ -2,6 +2,11 @@ package burli
 
 import javax.swing.event.{ListSelectionEvent, ListSelectionListener}
 
+import javax.swing.*;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+import java.awt.*;
+
 /**
  * explorer
  *
@@ -20,9 +25,27 @@ class GUI(ui: PwRoot) {
   northPanel.setLayout(new BoxLayout(northPanel, BoxLayout.X_AXIS)); // Vertical alignment
   frame.add(northPanel, BorderLayout.NORTH)
 
-  val filter = JTextArea("<Filter>")
+  val filter = JTextField("<Filter>")
   filter.setToolTipText("not implemented yet filter for displayed elements")
   filter.setPreferredSize(new java.awt.Dimension(200, 100))
+  // Add DocumentListener to detect changes
+  filter.getDocument().addDocumentListener(new DocumentListener() {
+    @Override
+    override def insertUpdate(e:DocumentEvent) = {
+      selectFrms( filter.getText())
+    }
+
+    @Override
+    override def  removeUpdate(e:DocumentEvent ) = {
+      selectFrms( filter.getText())
+    }
+
+    @Override
+    override def changedUpdate(e:DocumentEvent ) = {
+      // Usually for styled text; not used in plain JTextField
+    }
+  });
+
   northPanel.add(filter)
 
   val urls = JComboBox[String]()
@@ -77,43 +100,7 @@ class GUI(ui: PwRoot) {
   northPanel.add(goto)
   goto.setEnabled(false)
 
-
-  // frames
-  val frmsModel = DefaultListModel[String]()
-  val frms = JList(frmsModel)
-  for entry <- ui.frms.keySet.toList.sorted.zipWithIndex yield{
-    frmsModel.add(entry._2, entry._1)
-  }
-
   var currentFrm:FRM = _
-
-  frms.addListSelectionListener( new ListSelectionListener {
-    override def valueChanged(e: ListSelectionEvent): Unit = {
-      atomsModel.clear()
-      val item = frms.getSelectedValue()
-
-      if (ui.frms.contains(item)){
-        currentFrm = ui.frms(item)
-        println(item + " " + currentFrm.path)
-        enableButtons()
-        home.setEnabled(true)
-        if ( currentFrm.path.isEmpty) {
-          goto.setEnabled(false)
-          goto.setText("Goto")
-        } else
-          goto.setEnabled(true)
-          goto.setText("../"+currentFrm.path)
-
-        val frm = ui.frms(item)
-        for atom <- frm.atoms.keySet.toList.sorted.zipWithIndex yield{
-          atomsModel.add(atom._2, atom._1)
-        }
-      }
-    }
-  })
-
-  frms.setPreferredSize(new java.awt.Dimension(200, 300))
-  frame.add(JScrollPane(frms), BorderLayout.WEST)
 
   // atoms
   val atomsModel = DefaultListModel[String]()
@@ -156,7 +143,7 @@ class GUI(ui: PwRoot) {
   act.setToolTipText("create an Act block to be used in Gherkin");
   act.addActionListener(new ActionListener {
     def actionPerformed(e: ActionEvent) = {
-      val txt = currentFrm.mkSet
+      val txt = currentFrm.mkAct
       text.setText(txt)
     }
   })
@@ -203,17 +190,65 @@ class GUI(ui: PwRoot) {
 
   def disableButtons(): Unit = {
     for( b <- btlist) { b.setEnabled(false)}
+    home.setEnabled(false);
   }
   def enableButtons(): Unit = {
     for( b <- btlist) { b.setEnabled(true)}
   }
+
   frame.add(eastPanel, BorderLayout.EAST)
   disableButtons()
+
   val text = JTextArea()
   text.setFont(new Font("Monospaced", Font.BOLD , 14));
   text.setPreferredSize(new java.awt.Dimension(300, 200))
+  val southPanel = JPanel();
+  southPanel.setPreferredSize(new java.awt.Dimension(200, 400))
+  southPanel.setLayout(new BoxLayout(southPanel, BoxLayout.Y_AXIS)); // Vertical alignment
+  southPanel.add(JScrollPane(text), BorderLayout.SOUTH)
+  frame.add(southPanel, BorderLayout.SOUTH)
 
-  frame.add(JScrollPane(text), BorderLayout.SOUTH)
+  // frames
+  val frmsModel = DefaultListModel[String]()
+  val frms = JList(frmsModel)
+
+  def selectFrms(s: String) = {
+    frmsModel.clear()
+    for entry <- ui.frms.keySet.filter(_.contains(s)).toList.sorted.zipWithIndex yield {
+      frmsModel.add(entry._2, entry._1)
+    }
+    disableButtons()
+  }
+
+  selectFrms("");
+
+  frms.addListSelectionListener(new ListSelectionListener {
+    override def valueChanged(e: ListSelectionEvent): Unit = {
+      atomsModel.clear()
+      val item = frms.getSelectedValue()
+
+      if (ui.frms.contains(item)) {
+        currentFrm = ui.frms(item)
+        println(item + " " + currentFrm.path)
+        enableButtons()
+        home.setEnabled(true)
+        if (currentFrm.path.isEmpty) {
+          goto.setEnabled(false)
+          goto.setText("Goto")
+        } else
+          goto.setEnabled(true)
+          goto.setText("../" + currentFrm.path)
+
+        val frm = ui.frms(item)
+        for atom <- frm.atoms.keySet.toList.sorted.zipWithIndex yield {
+          atomsModel.add(atom._2, atom._1)
+        }
+      }
+    }
+  })
+
+  frms.setPreferredSize(new java.awt.Dimension(200, 300))
+  frame.add(JScrollPane(frms), BorderLayout.WEST)
 
 
   frame.pack()

@@ -63,9 +63,14 @@ object Defs {
     text
   }
 
-  def gen(inp: String) = {
+  def gen(inp: String, frm:String = "") = {
 
-
+    val myFrm =
+      if frm.isEmpty then "MyFrm_"
+      else {
+        val tmp = Defs.mkCamelCase(frm)
+        if tmp.endsWith("_") then tmp else tmp + "_"
+      }
     import java.io.{StringWriter, PrintWriter}
 
     val sw = new StringWriter()
@@ -107,14 +112,14 @@ object Defs {
     }
 
     pw.println(
-      """import burli.*
+      s"""import burli.*
         |import burli.bricks.*
         |import com.microsoft.playwright.*
         |import com.microsoft.playwright.options.*
         |
-        |class NewFrm_ ( own:CanOwn ) extends FRM(own, "New Frame"){
+        |class $myFrm ( own:CanOwn ) extends FRM(own, "New Frame"){
         |  // tag::fields[]
-        |  given ref: Own[NewFrm_] = Own(this)
+        |  given ref: Own[$myFrm] = Own(this)
         |  // TODO set path if you can NAVIGATE directly to this page;  otherwise delete this
         |  override def path: String = ""
         |""".stripMargin)
@@ -122,12 +127,12 @@ object Defs {
     declFields()
 
     pw.println(
-      """
+      s"""
         |  // end::fields[]
         |}
         |
         |
-        |//  val newFrm = NewFrm_(this)
+        |val _$myFrm = $myFrm(this)
         |""".stripMargin)
     pw.flush()
     sw.toString

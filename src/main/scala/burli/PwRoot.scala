@@ -116,4 +116,9 @@ class PwRoot(val baseUrl: String) extends CanOwn {
   def gui: GUI = {
     new GUI(this)
   }
+
+  def gen: GenGUI = {
+    new GenGUI("")
+  }
+
 }
