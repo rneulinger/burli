@@ -4,6 +4,9 @@ import scala.jdk.CollectionConverters.*
 import com.microsoft.playwright.*
 
 class PwRoot(val baseUrl: String) extends CanOwn {
+  def nameOfApp = "No Name"
+  def predefBaseUrls = Map[String, String]()
+
   private var adoptedAtoms = List[ATOM[?]]()
   lazy val atoms: Map[String, ATOM[?]] = adoptedAtoms.map(a => a.fullName -> a).toMap
 
@@ -109,5 +112,8 @@ class PwRoot(val baseUrl: String) extends CanOwn {
   override def openUrl(path: String): Unit = {
     pg.navigate(baseUrl + path)
   }
-  
+
+  def gui: GUI = {
+    new GUI(this)
+  }
 }

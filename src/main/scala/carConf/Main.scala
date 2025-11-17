@@ -21,6 +21,7 @@ import carConf.accessories.*
 */
 val s = "file:///C:/Projects/burli/carconfigWeb/html/CarConfig.htm?lang=en#"
 class Main() extends PwRoot(s) {
+  override def nameOfApp = "Car Configurator"
 
   // TODO Mene
   val CarConfig = CarConfig_(this)

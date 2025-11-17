@@ -134,4 +134,30 @@ abstract class FRM(override val own: CanOwn, typ:String = "")
        |""".stripMargin
     Defs.toClipboard(res)
   }
+
+  /**
+   * create asciidoc snipped (copie to clipboard)
+   * @return
+   */
+  def mkDoc:String= {
+    def mkLink = if path.isEmpty then "" else s"* http{ip}/${path}[]"
+    def mkInc = if path.isEmpty then "" else s"${path}/"
+    def mkArrow = if path.isEmpty then "" else " ->"
+    val res = s"""
+       |=== ${myType}${mkArrow}
+       |
+       |${path}
+       |
+       |image::VoIP.png[]
+       |
+       |[,java]
+       |----
+       |include::{SRI}/${mkInc}${myType}_.scala[tag=fields]
+       |----
+       |
+       |
+       |""".stripMargin
+    Defs.toClipboard(res)
+    res
+  }
 }

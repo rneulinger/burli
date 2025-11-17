@@ -3,7 +3,6 @@ package burli
 import com.microsoft.playwright.{Locator, Page}
 
 abstract class OBJ {
-  protected def isRoot: Boolean
 
   def pg: Page
 
