@@ -66,6 +66,34 @@ abstract class FRM(override val own: CanOwn, typ:String = "")
   def typeMax = if atoms.isEmpty then 0 else atoms.values.map(_.myType.length).max
   val BLANK = " ".charAt(0)
 
+  def mkAdd: String = {
+    val head = s"""|| ${"name".padTo(atomsMax, " ".charAt(0))} |   | typ |"""
+    val lines = for (a <- atoms.filterNot(_._2.isInstanceOf[BTN[_]])) yield {
+      s"""|| ${a._1.padTo(atomsMax, BLANK)} |   | ${a._2.myType.padTo(typeMax, BLANK)} |"""
+    }
+    val tbl = List(head) ::: lines.toList
+    val res =
+      s"""
+         |* add: '$fullType'
+      ${tbl.mkString("\n")}
+         |""".stripMargin
+    Defs.toClipboard(res)
+  }
+
+  def mkEdit: String = {
+    val head = s"""|| ${"name".padTo(atomsMax, " ".charAt(0))} |   | typ |"""
+    val lines = for (a <- atoms.filterNot(_._2.isInstanceOf[BTN[_]])) yield {
+      s"""|| ${a._1.padTo(atomsMax, BLANK)} |   | ${a._2.myType.padTo(typeMax, BLANK)} |"""
+    }
+    val tbl = List(head) ::: lines.toList
+    val res =
+      s"""
+         |* edit: '$fullType'
+      ${tbl.mkString("\n")}
+         |""".stripMargin
+    Defs.toClipboard(res)
+  }
+
   def mkSet:String = {
     val head = s"""|| ${"name".padTo(atomsMax," ".charAt(0))} |   | typ |"""
     val lines = for (a <- atoms.filterNot(_._2.isInstanceOf[BTN[_]]) ) yield {

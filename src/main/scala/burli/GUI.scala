@@ -25,7 +25,7 @@ class GUI(ui: PwRoot) {
   northPanel.setLayout(new BoxLayout(northPanel, BoxLayout.X_AXIS)); // Vertical alignment
   frame.add(northPanel, BorderLayout.NORTH)
 
-  val filter = JTextField("<Filter>")
+  val filter = JTextField("")
   filter.setToolTipText("not implemented yet filter for displayed elements")
   filter.setPreferredSize(new java.awt.Dimension(200, 100))
   // Add DocumentListener to detect changes
@@ -112,6 +112,24 @@ class GUI(ui: PwRoot) {
   atoms.setPreferredSize(new java.awt.Dimension(200, 400))
   frame.add(atoms, BorderLayout.CENTER)
 
+  val add = JButton("Add Gherkin")
+  add.addActionListener(new ActionListener {
+    def actionPerformed(e: ActionEvent) = {
+      val txt = currentFrm.mkAdd
+      text.setText(txt)
+    }
+  })
+  add.setToolTipText("create an Add block to be used in Gherkin");
+
+  val edit = JButton("Edit Gherkin")
+  edit.addActionListener(new ActionListener {
+    def actionPerformed(e: ActionEvent) = {
+      val txt = currentFrm.mkEdit
+      text.setText(txt)
+    }
+  })
+  add.setToolTipText("create an Edit block to be used in Gherkin");
+
   val set = JButton("Set Gherkin")
   set.addActionListener(new ActionListener{
     def actionPerformed(e: ActionEvent) = {
@@ -178,7 +196,7 @@ class GUI(ui: PwRoot) {
     }
   })
 
-  val btlist = scala.collection.immutable.List[JComponent](set, get, chk,act, doc,cs, help)
+  val btlist = scala.collection.immutable.List[JComponent](add, edit, set, get, chk,act, doc,cs, help)
 
   // Create a panel for the EAST region
   val eastPanel = JPanel();
@@ -247,8 +265,13 @@ class GUI(ui: PwRoot) {
     }
   })
 
+  val westPanel = JPanel();
+  westPanel.setPreferredSize(new java.awt.Dimension(200, 400))
+  westPanel.setLayout(new BoxLayout(westPanel, BoxLayout.Y_AXIS)); // Vertical alignment
+  westPanel.add(JScrollPane(frms), BorderLayout.WEST)
+  frame.add(westPanel, BorderLayout.WEST)
+
   frms.setPreferredSize(new java.awt.Dimension(200, 300))
-  frame.add(JScrollPane(frms), BorderLayout.WEST)
 
 
   frame.pack()

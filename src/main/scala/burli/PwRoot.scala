@@ -75,7 +75,7 @@ class PwRoot(val baseUrl: String) extends CanOwn {
   }
 
   def goto(name: String): Unit = {
-    val dest = Defs.mkCamelCase(name) + "_"
+    val dest = Defs.mkCamelCase(name)
     if (frms.keySet.contains(dest)) {
       frms(dest).goto()
     } else{
@@ -84,7 +84,7 @@ class PwRoot(val baseUrl: String) extends CanOwn {
   }
 
   def onto( name:String): Unit = {
-    val dest = Defs.mkCamelCase(name) + "_"
+    val dest = Defs.mkCamelCase(name)
     if ( frms.keySet.contains(dest) ){
       onto( frms(dest))
     } else{
