@@ -59,18 +59,18 @@ object Defs {
     val selection = new StringSelection(text)
     val clipboard = Toolkit.getDefaultToolkit.getSystemClipboard
     clipboard.setContents(selection, null)
-    println(s"Copied to clipboard: $text")
+    //println(s"Copied to clipboard: $text")
     text
   }
 
   def gen(inp: String, frm:String = "") = {
+    val tr = frm.trim
+    val name = if tr.isEmpty then "New frame" else tr
+    val cc = mkCamelCase(name)
+    val p2 = if( cc == name) then "" else s", \"${name}\""
 
-    val myFrm =
-      if frm.isEmpty then "MyFrm_"
-      else {
-        val tmp = Defs.mkCamelCase(frm)
-        if tmp.endsWith("_") then tmp else tmp + "_"
-      }
+    val myFrm = if cc.endsWith("_") then cc else cc + "_"
+
     import java.io.{StringWriter, PrintWriter}
 
     val sw = new StringWriter()
@@ -117,7 +117,7 @@ object Defs {
         |import com.microsoft.playwright.*
         |import com.microsoft.playwright.options.*
         |
-        |class $myFrm ( own:CanOwn ) extends FRM(own, "New Frame"){
+        |final class $myFrm ( own:CanOwn ) extends FRM(own${p2}){
         |  // tag::fields[]
         |  given ref: Own[$myFrm] = Own(this)
         |  // TODO set path if you can NAVIGATE directly to this page;  otherwise delete this
@@ -136,6 +136,39 @@ object Defs {
         |""".stripMargin)
     pw.flush()
     sw.toString
+  }
+
+  /**
+   *
+   * @param s1
+   * @param s2
+   * @return
+   * println(levenshtein("kitten", "sitting")) // Output: 3
+   * println(levenshtein("scala", "scala")) // Output: 0
+   * println(levenshtein("flaw", "lawn")) // Output: 2
+   *
+   *
+   */
+  def levenshtein(s1: String, s2: String): Int = {
+    val len1 = s1.length
+    val len2 = s2.length
+    val dim = len1.max(len2) + 1
+    val dp: Array[Array[Int]] = Array.ofDim(dim, dim)
+
+    for (i <- 0 to len1) dp(i)(0) = i
+    for (j <- 0 to len2) dp(0)(j) = j
+
+    for (i <- 1 to len1) {
+      for (j <- 1 to len2) {
+        val cost = if (s1(i - 1) == s2(j - 1)) 0 else 1
+        dp(i)(j) = List(
+          dp(i - 1)(j) + 1, // deletion
+          dp(i)(j - 1) + 1, // insertion
+          dp(i - 1)(j - 1) + cost // substitution
+        ).min
+      }
+    }
+    dp(len1)(len2)
   }
 
 }

@@ -6,9 +6,9 @@ import com.microsoft.playwright.options.*
 import burli.*
 
 object Lab extends Main( ){
-  //lazy val C1 = new Main()
-  //lazy val C2 = new Main()
-  //lazy val `/` = this
+  lazy val C1 = new Main()
+  lazy val C2 = new Main()
+  lazy val `/` = this
   // file:///C:/burli/carconfigWeb/html/CarConfig.htm?lang=en
 
   @main def clickMains() = {

@@ -10,9 +10,24 @@ class PwRoot(val baseUrl: String) extends CanOwn {
   private var adoptedAtoms = List[ATOM[?]]()
   lazy val atoms: Map[String, ATOM[?]] = adoptedAtoms.map(a => a.fullName -> a).toMap
 
-  private var adoptedFrms = List[FRM]()
-  lazy val frms: Map[String, FRM] = adoptedFrms.map(a => a.myType -> a).toMap
+  /**
+   * variables for test execution
+   */
+  private var VARS = Map[String, Any]()
+  def setVar( key:String, value:Any): Unit = {
+    val res = VARS + (key -> value)
+    VARS = res
+  }
+  def getVar( key:String): Any = {VARS.get(key)}
+  def getVarOrElse( key:String, default:Any): Any = {VARS.getOrElse(key, default)}
 
+
+  private var adoptedFrms = List[FRM]()
+  lazy val (short, full, frms)  = {
+    val short = adoptedFrms.map(a => a.myType -> a).toMap
+    val full = adoptedFrms.map(a => a.fullType -> a).toMap
+    (short, full, short ++ full)
+  }
 
   final def adopt(obj: OBJ): Unit =
     obj match {
@@ -25,16 +40,16 @@ class PwRoot(val baseUrl: String) extends CanOwn {
 
   lazy val playwright: Playwright = Playwright.create()
 
-  lazy val bOpts = new BrowserType.LaunchOptions()
-    .setHeadless(false)
+  lazy val bOpts = new BrowserType.LaunchOptions().setHeadless(false)
+
   lazy val browser: Browser = playwright
     .chromium()
     .launch(bOpts)
 
   lazy val cOpts: Browser.NewContextOptions = new Browser.NewContextOptions()
     .setIgnoreHTTPSErrors(true)
-  lazy val context: BrowserContext = browser.newContext(cOpts) // HTTPS-Fehler ignorieren
 
+  lazy val context: BrowserContext = browser.newContext(cOpts) // HTTPS-Fehler ignorieren
 
   lazy val pg: Page = {
     val tmp = context.newPage()
@@ -109,16 +124,7 @@ class PwRoot(val baseUrl: String) extends CanOwn {
     }
   }
 
-  override def openUrl(path: String): Unit = {
-    pg.navigate(baseUrl + path)
-  }
-
-  def gui: GUI = {
-    new GUI(this)
-  }
-
-  def gen: GenGUI = {
-    new GenGUI("")
-  }
-
+  override def openUrl(path: String): Unit = pg.navigate(baseUrl + path)
+  def gui: GUI = GUI(this)
+  def gen: GenGUI = new GenGUI("")
 }

@@ -61,10 +61,10 @@ abstract class FRM(override val own: CanOwn, typ:String = "")
     }
   }
 
-  def atomsMax = if atoms.isEmpty then 0 else atoms.keySet.map(_.length).max
-  def shortMax = if atoms.isEmpty then 0 else atoms.values.map(_.fullName.length).max
-  def typeMax = if atoms.isEmpty then 0 else atoms.values.map(_.myType.length).max
-  val BLANK = " ".charAt(0)
+  private def atomsMax = if atoms.isEmpty then 0 else atoms.keySet.map(_.length).max
+  private def shortMax = if atoms.isEmpty then 0 else atoms.values.map(_.fullName.length).max
+  private def typeMax = if atoms.isEmpty then 0 else atoms.values.map(_.myType.length).max
+  private val BLANK = " ".charAt(0)
 
   def mkAdd: String = {
     val head = s"""|| ${"name".padTo(atomsMax, " ".charAt(0))} |   | typ |"""
@@ -89,6 +89,20 @@ abstract class FRM(override val own: CanOwn, typ:String = "")
     val res =
       s"""
          |* edit: '$fullType'
+      ${tbl.mkString("\n")}
+         |""".stripMargin
+    Defs.toClipboard(res)
+  }
+
+  def mkNext: String = {
+    val head = s"""|| ${"name".padTo(atomsMax, " ".charAt(0))} |   | typ |"""
+    val lines = for (a <- atoms.filterNot(_._2.isInstanceOf[BTN[_]])) yield {
+      s"""|| ${a._1.padTo(atomsMax, BLANK)} |   | ${a._2.myType.padTo(typeMax, BLANK)} |"""
+    }
+    val tbl = List(head) ::: lines.toList
+    val res =
+      s"""
+         |* next: '$fullType'
       ${tbl.mkString("\n")}
          |""".stripMargin
     Defs.toClipboard(res)
@@ -156,24 +170,64 @@ abstract class FRM(override val own: CanOwn, typ:String = "")
       val name = a._2.fullName
       val short = Defs.mkCamelCase(name)
       val typ = a._2.myType
-      s"""|        ${short} = new ${typ}(this, \"${name}\");"""
+      s"""|        $short = new $typ(this, \"$name\");"""
     }
     val decls = for (a <- atoms) yield {
       val name = a._2.fullName
       val short = Defs.mkCamelCase(name)
       val typ = a._2.myType
-      s"""|    public readonly ${typ} ${short};"""
+      s"""|    public readonly $typ $short;"""
     }
 
-    val res = s"""public class $myType : FRM{
+    val res = s"""namespace Generic;
+       |
+       |using Core;
+       |// ReSharper disable InconsistentNaming
+       |public class ${myType}_ : FRM{
        ${decls.mkString("\n")}
        |
-       |  public $myType( CanOwn own ):base(own) {
+       |  public ${myType}_( CanOwn own ):base(own) {
           ${lines.mkString("\n")}
        |  }
        |}
-       |// ${myType} _${myType} = new ${myType}( this );
+       |// ${myType}_ _$myType = new $myType( this );
        |""".stripMargin
+    Defs.toClipboard(res)
+  }
+
+  /**
+   * typescript sharp erzeugen
+   */
+  def mkTs:String = {
+    val Core="Core"
+    val lines = for (a <- atoms) yield {
+      val name = a._2.fullName
+      val short = Defs.mkCamelCase(name)
+      val typ = a._2.myType
+      s"""|        this.$short = new $Core.$typ(this, \"$name\");"""
+    }
+    val decls = for (a <- atoms) yield {
+      val name = a._2.fullName
+      val short = Defs.mkCamelCase(name)
+      val typ = a._2.myType
+      s"""|    public readonly $short : $Core.$typ;"""
+    }
+
+    val res = s"""namespace Generic{
+                 |
+                 |//import {BTN,TXT,FRM,CanOwn} from '../Core';
+                 |
+                 |export class ${myType}_ extends $Core.FRM{
+       ${decls.mkString("\n")}
+                 |
+                 |  constructor( own:$Core.CanOwn ){
+                 |    super(own)
+          ${lines.mkString("\n")}
+                 |  }
+                 |}
+                 |// ${myType}_ _$myType = new $myType( this );
+                 |}
+                 |""".stripMargin
     Defs.toClipboard(res)
   }
 
@@ -182,19 +236,19 @@ abstract class FRM(override val own: CanOwn, typ:String = "")
    * @return
    */
   def mkDoc:String= {
-    def mkLink = if path.isEmpty then "" else s"* http{ip}/${path}[]"
-    def mkInc = if path.isEmpty then "" else s"${path}/"
+    def mkLink = if path.isEmpty then "" else s"* http{ip}/$path[]"
+    def mkInc = if path.isEmpty then "" else s"$path/"
     def mkArrow = if path.isEmpty then "" else " ->"
     val res = s"""
-       |=== ${myType}${mkArrow}
+       |=== $myType$mkArrow
        |
-       |${path}
+       |$path
        |
        |image::VoIP.png[]
        |
        |[,java]
        |----
-       |include::{SRI}/${mkInc}${myType}_.scala[tag=fields]
+       |include::{SRI}/$mkInc${myType}_.scala[tag=fields]
        |----
        |
        |

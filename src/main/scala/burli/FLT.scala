@@ -9,7 +9,7 @@ import com.microsoft.playwright.options.AriaRole
 
 
 case class FLT[F <: FRM](b: By = Loc.Default)(using ref: Own[F])
-  extends ATOM[F](b) {
+  extends DATA[F](b) {
   override def loc(pg: Page): Locator = {
     by match {
       case Loc.Default =>

@@ -3,8 +3,6 @@ package burli
 import com.microsoft.playwright.{Locator, Page}
 
 abstract class OBJ {
-  protected def isRoot: Boolean
-
   def pg: Page
 
   def myType: String = this.getClass.getSimpleName.reverse.dropWhile( _.toString == "_").reverse.mkString("")
@@ -18,4 +16,8 @@ abstract class OBJ {
 
   def log(msg: Any) =
     println(pre + "." + msg)
+
+  def page2Loc( l:Locator):Function1[Page, Locator] = new Function1[Page,Locator]{
+    def apply( p:Page):Locator = l
+  }
 }
