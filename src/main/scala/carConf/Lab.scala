@@ -3,7 +3,7 @@ package carConf
 import com.microsoft.playwright.*
 import com.microsoft.playwright.options.*
 
-import burli.*
+import coreo.*
 
 object Lab extends Main( ){
   lazy val C1 = new Main()

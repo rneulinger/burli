@@ -1,11 +1,11 @@
 package carConf.ui.specials
 
-import burli.*
+import coreo.*
 import com.microsoft.playwright.*
 import com.microsoft.playwright.options.*
 
 class Specials_ ( own:CanOwn ) extends FRM(own)
- with burli.bricks.NewChangDeleteDetailsCancelOK {
+ with coreo.bricks.NewChangDeleteDetailsCancelOK {
 
   // tag::fields[]
   given ref: Own[Specials_] = Own(this)

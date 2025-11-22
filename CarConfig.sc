@@ -1,8 +1,8 @@
 import $ivy.`com.microsoft.playwright:playwright:1.53.0`
-import $cp.`./build/libs/burli.jar`
+import $cp.`./build/libs/coreo.jar`
 import com.microsoft.playwright.*
 import com.microsoft.playwright.options.*
-import burli.*
+import coreo.*
 import carConf.*
 
 lazy val C1 = Lab.C1

@@ -1,6 +1,6 @@
 package carConf.ui
 
-import burli.*
+import coreo.*
 import carConf.ui.specials.*
 import carConf.ui.accessories.{AccessoriesDialog_, Accessories_}
 import carConf.ui.specials.{SpecialsDialog_, Specials_}

@@ -1,7 +1,7 @@
 package carConf.ui.accessories
 
-import burli.*
-import burli.bricks.*
+import coreo.*
+import coreo.bricks.*
 import com.microsoft.playwright.*
 import com.microsoft.playwright.options.*
 

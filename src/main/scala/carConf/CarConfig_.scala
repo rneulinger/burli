@@ -1,6 +1,6 @@
 package carConf
 
-import burli.*
+import coreo.*
 
 import com.microsoft.playwright.options.AriaRole
 import com.microsoft.playwright.{Locator, Page}

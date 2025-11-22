@@ -1,6 +1,6 @@
 package carConf.specials
 
-import burli.*
+import coreo.*
 
 class SpecialsDialog_ ( own:CanOwn ) extends FRM(own){
 
